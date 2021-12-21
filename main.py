@@ -1,6 +1,13 @@
 from hangmanpics import HANGMANPICS
+import json
+import random
 
-# Initalizaions
+# Setup
+
+# Loading JSON file
+with open('words_dictionary.json') as f:
+    data = json.load(f)
+    word_list = list(data.keys())
 
 # Scores
 number_of_wins = 0
@@ -13,6 +20,8 @@ def printScore():
 
 
 def win():
+    global number_of_wins
+    number_of_wins += 1
     print("You Won!!! ")
     printScore()
 
@@ -23,6 +32,8 @@ def gameOver():
 
 
 def lose():
+    global number_of_loses
+    number_of_loses += 1
     print("You Lost")
     printScore()
 
@@ -47,6 +58,9 @@ def guess_word_validation():
 # Start a game
 def start():
 
+    previous_words_list = []
+    guessed_letters_list = []
+
     number_of_guesses = 7
     global number_of_wins
     global number_of_loses
@@ -61,16 +75,20 @@ def start():
             gameOver()
             gameOn = False
             break;
+
         elif play_again == 'y':
             number_of_guesses = 7
-            #- Randomly choose a word from the word_list and assign it to a variable called chosen_word.
-            # chosen_word = random.choice(word_list)
+            #- Randomly choose a word from the word_list if it hadn't been chosen already.
 
-            
 
-            chosen_word = "wer".lower()
-            #- Create an empty List called display.
-            #For each letter in the chosen_word, add a "_" to 'display'.
+            found_new_word = False
+            while not found_new_word:
+                chosen_word = random.choice(word_list)
+                if chosen_word not in previous_words_list:
+                    found_new_word = True
+
+
+            #For each letter in the chosen_word, add a "_" to display.
             display = list(chosen_word)
             for i in range(len(display)):
                 display[i] = '_'
@@ -83,6 +101,8 @@ def start():
                     break;
                 
                 print(HANGMANPICS[number_of_guesses-1])
+
+                print(f"Previous guesses: {' '.join(guessed_letters_list)}")
                 # display the word
                 print(f"{' '.join(display)}")
             
@@ -92,6 +112,8 @@ def start():
                 if letter_or_word == 'l':
                     # validate that the input is a single letter
                     guessed_letter = guess_letter_validation()
+                    # show previously guessed letters
+                    guessed_letters_list.append(guessed_letter)
 
                     if guessed_letter not in chosen_word:
                         print("{} in not in the word".format(guessed_letter))
@@ -107,7 +129,6 @@ def start():
                     guessed_word = guess_word_validation()
 
                     if guessed_word == chosen_word:
-                        number_of_wins += 1 
                         for i in range(len(chosen_word)):
                             display[i] = chosen_word[i]                    
                     else:
