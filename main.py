@@ -74,6 +74,7 @@ def start():
 
         elif play_again == 'y':
             number_of_guesses = 7
+            guessed_letters_list.clear()
             
             # Randomly choose a word from the word_list if it hadn't been chosen already.
             found_new_word = False
