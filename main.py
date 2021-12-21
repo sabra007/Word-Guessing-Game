@@ -5,6 +5,7 @@ import random
 # Setup
 
 # Loading JSON file
+# create a list from dict keys
 with open('words_dictionary.json') as f:
     data = json.load(f)
     word_list = list(data.keys())
@@ -25,17 +26,16 @@ def win():
     print("You Won!!! ")
     printScore()
 
-
-def gameOver():
-    print("Game Over")
-    printScore()
-
-
 def lose():
     global number_of_loses
     number_of_loses += 1
     print("You Lost")
     printScore()
+
+def gameOver():
+    print("Game Over")
+    printScore()
+
 
 def guess_letter_validation():
     while 1:
@@ -60,11 +60,7 @@ def start():
 
     previous_words_list = []
     guessed_letters_list = []
-
     number_of_guesses = 7
-    global number_of_wins
-    global number_of_loses
-
     gameOn = True
 
     while gameOn:
@@ -78,9 +74,8 @@ def start():
 
         elif play_again == 'y':
             number_of_guesses = 7
-            #- Randomly choose a word from the word_list if it hadn't been chosen already.
-
-
+            
+            # Randomly choose a word from the word_list if it hadn't been chosen already.
             found_new_word = False
             while not found_new_word:
                 chosen_word = random.choice(word_list)
@@ -88,11 +83,12 @@ def start():
                     found_new_word = True
 
 
-            #For each letter in the chosen_word, add a "_" to display.
+            # For each letter in the chosen_word, add a "_" to display.
             display = list(chosen_word)
             for i in range(len(display)):
                 display[i] = '_'
 
+            # while the word is not fully guessed 
             while '_' in display:
 
                 if number_of_guesses == 0:
@@ -135,14 +131,18 @@ def start():
                         number_of_guesses -= 1
                         print("Your guess was incorrect.")
 
+                # letter or word invalid choice
                 else:
                     print('Invalid input. Try again.\n')
-                
+            
+            # while '_'
             else:
                 win()
-                # display the word
+
                 print(f"{' '.join(display)}")
-        else:
+
+        # play_again invalid choice
+        else: 
             print("Invalid Input. Try again.")
 
 
